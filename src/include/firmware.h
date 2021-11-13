@@ -1,9 +1,9 @@
 /**
- * @file src\include\platform.h
+ * @file src\include\firmware.h
  *
  * Copyright (C) 2021
  *
- * platform.h is free software: you can redistribute it and/or modify
+ * firmware.h is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
@@ -20,8 +20,8 @@
  *
  * @encoding utf-8
  */
-#ifndef __PLATFORM_H
-#define __PLATFORM_H
+#ifndef __FIRMWARE_H
+#define __FIRMWARE_H
 
 #ifdef __cplusplus
 extern "C"
@@ -35,24 +35,12 @@ extern "C"
 
 /*---------- macro ----------*/
 /*---------- type define ----------*/
-typedef struct {
-    struct {
-        void *embed_flash;              /*<< embed flash */
-        void *backup_flash;             /*<< firmware backup flash */
-        void *com;                      /*<< com for receive and send serial data */
-        void *fifo;                     /*<< fifo for receive serial data */
-        void *wdt;                      /*<< watch dog */
-    } dev;
-} platform_describe_t;
-
 /*---------- variable prototype ----------*/
-extern platform_describe_t g_plat;
-
 /*---------- function prototype ----------*/
-extern int32_t plat_init(void);
-extern void plat_wdt_feed(void);
+extern int32_t firmware_init(void);
+extern bool firmware_get_updated_flag(void);
 
 #ifdef __cplusplus
 }
 #endif
-#endif /* __PLATFORM_H */
+#endif /* __FIRMWARE_H */

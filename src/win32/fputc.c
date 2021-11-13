@@ -1,9 +1,9 @@
 /**
- * @file src\win32\main.c
+ * @file src\win32\fputc.c
  *
  * Copyright (C) 2021
  *
- * main.c is free software: you can redistribute it and/or modify
+ * fputc.c is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
@@ -23,25 +23,34 @@
 
 /*---------- includes ----------*/
 #include "platform.h"
-#include "strategy.h"
-#include "config/errorno.h"
+#include "serial.h"
 #include "config/options.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 /*---------- macro ----------*/
 /*---------- variable prototype ----------*/
 /*---------- function prototype ----------*/
-extern void thread_ticks_create(void);
-extern void thread_com_create(void);
-
 /*---------- type define ----------*/
 /*---------- variable ----------*/
+static char _buf[1024];
+
 /*---------- function ----------*/
-int32_t main(void)
+static uint16_t _fputs(const char *s, uint16_t length)
 {
-    plat_init();
-    /* create thread */
-    thread_ticks_create();
-    thread_com_create();
-    /* start strategy */
-    strategy_process();
+    device_write(g_plat.dev.com, (void *)s, SERIAL_WIRTE_CHANGE_DIR_AUTOMATICALLY, length);
+
+    return length;
+}
+
+int32_t printk(const char *fmt, ...)
+{
+    va_list args;
+    int32_t len = 0;
+
+    va_start(args, fmt);
+    len = vsnprintf(_buf, ARRAY_SIZE(_buf), fmt, args);
+    va_end(args);
+
+    return _fputs(_buf, len);
 }

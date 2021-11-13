@@ -26,12 +26,16 @@
 #include "driver.h"
 #include "device.h"
 #include "simplefifo.h"
+#include "firmware.h"
+#include "wdt.h"
 #include "config/errorno.h"
 #include "config/options.h"
 
 /*---------- macro ----------*/
 /*---------- variable prototype ----------*/
 /*---------- function prototype ----------*/
+extern void irq_process_init(void);
+
 /*---------- type define ----------*/
 /*---------- variable ----------*/
 platform_describe_t g_plat;
@@ -59,7 +63,8 @@ static void _driver_init(void)
 
 static void _misc_init(void)
 {
-
+    irq_process_init();
+    firmware_init();
 }
 
 int32_t plat_init(void)
@@ -68,4 +73,9 @@ int32_t plat_init(void)
     _misc_init();
 
     return CY_EOK;
+}
+
+void plat_wdt_feed(void)
+{
+    device_ioctl(g_plat.dev.wdt, IOCTL_WDT_FEED, NULL);
 }

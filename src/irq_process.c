@@ -1,9 +1,9 @@
 /**
- * @file src\win32\main.c
+ * @file src\irq_process.c
  *
  * Copyright (C) 2021
  *
- * main.c is free software: you can redistribute it and/or modify
+ * irq_process.c is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
@@ -23,25 +23,27 @@
 
 /*---------- includes ----------*/
 #include "platform.h"
-#include "strategy.h"
-#include "config/errorno.h"
-#include "config/options.h"
+#include "serial.h"
+#include "simplefifo.h"
 
 /*---------- macro ----------*/
 /*---------- variable prototype ----------*/
 /*---------- function prototype ----------*/
-extern void thread_ticks_create(void);
-extern void thread_com_create(void);
-
 /*---------- type define ----------*/
 /*---------- variable ----------*/
 /*---------- function ----------*/
-int32_t main(void)
+int32_t com_irq_handle(uint32_t irq_handler, void *args, uint32_t length)
 {
-    plat_init();
-    /* create thread */
-    thread_ticks_create();
-    thread_com_create();
-    /* start strategy */
-    strategy_process();
+    uint32_t avaiale_len = simplefifo_get_avaiable(g_plat.dev.fifo);
+
+    if(length > avaiale_len) {
+        length = avaiale_len;
+    }
+
+    return (int32_t)simplefifo_write(g_plat.dev.fifo, (const uint8_t *)args, length);
+}
+
+void irq_process_init(void)
+{
+    device_ioctl(g_plat.dev.com, IOCTL_SERIAL_SET_IRQ_HANDLER, (void *)com_irq_handle);
 }
