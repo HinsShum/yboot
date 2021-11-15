@@ -118,7 +118,11 @@ extern "C"
 
 /* fifo size config
  */
-#define CONFIG_FIFO_SIZE                (1024)
+#define CONFIG_FIFO_SIZE                (10400)
+
+/* recv buffer size
+ */
+#define CONFIG_RECV_BUFFER_SIZE         (1040)
 
 /* the max time for wait space char
  */

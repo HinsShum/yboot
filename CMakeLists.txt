@@ -76,7 +76,7 @@ add_subdirectory(src)
 add_subdirectory(driver)
 add_subdirectory(common)
 add_subdirectory(utils)
-# add_subdirectory(components)
+add_subdirectory(components)
 
 # tell cmake asm file also is c file
 set_property(SOURCE ${C_SOURCE_FILES} PROPERTY LANGUAGE C)

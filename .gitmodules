@@ -6,3 +6,7 @@
 	path = utils
 	url = git@github.com:HinsShum/utils-frame.git
 	branch = main
+[submodule "components/ymodem"]
+	path = components/ymodem
+	url = git@github.com:HinsShum/ymodem.git
+	branch = main

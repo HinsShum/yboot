@@ -26,6 +26,7 @@
 #include "platform.h"
 #include "simplefifo.h"
 #include "flash.h"
+#include "download.h"
 #include "config/errorno.h"
 #include "config/options.h"
 #include <ctype.h>
@@ -38,6 +39,7 @@ static int32_t _erase_app_backup(void);
 static int32_t _echo_info(void);
 static int32_t _jump2app(void);
 static int32_t _reboot(void);
+static int32_t _ymodem(void);
 
 /*---------- type define ----------*/
 typedef int32_t (*func_t)(void);
@@ -50,10 +52,10 @@ typedef struct {
 static cb_t cb_array[] = {
     {'E', _erase_app_backup},
     {'I', _echo_info},
-    {'Y', NULL},
+    {'Y', _ymodem},
     {'G', _jump2app},
     {'R', _reboot},
-    {'U', NULL},
+    // {'U', NULL},
     {' ', _echo_usage}
 };
 static const char *usage[] = {
@@ -162,6 +164,19 @@ static int32_t _reboot(void)
     return STRATEGY_ERR_REBOOT;
 }
 
+static int32_t _ymodem(void)
+{
+    int32_t retval = STRATEGY_ERR_OK;
+
+    if(STRATEGY_ERR_OK == (retval = _erase_app_backup())) {
+        if(CY_EOK != download_file()) {
+            retval = STRATEGY_ERR_FAILED;
+        }
+    }
+
+    return retval;
+}
+
 static int32_t _process(void)
 {
     int32_t retval = STRATEGY_ERR_OK;
@@ -171,18 +186,19 @@ static int32_t _process(void)
     simplefifo_reset(g_plat.dev.fifo);
     _echo_usage();
     for(;;) {
+        retval = STRATEGY_ERR_OK;
         plat_wdt_feed();
         if(_get_char(&ch, 5000)) {
             ch = toupper(ch);
             cb = NULL;
             for(uint8_t i = 0; i < ARRAY_SIZE(cb_array); ++i) {
                 if(cb_array[i].ch == ch) {
-                    cb = cb_array[i].cb;
+                    retval = cb_array[i].cb();
                     break;
                 }
             }
-            if(cb) {
-                retval = cb();
+            if(retval == STRATEGY_ERR_JUMP || retval == STRATEGY_ERR_REBOOT) {
+                break;
             }
         } else {
             debug_warn("Get cmd timeout\r\n");

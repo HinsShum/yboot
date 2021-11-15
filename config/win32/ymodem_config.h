@@ -1,9 +1,9 @@
 /**
- * @file src\include\strategy.h
+ * @file config\win32\ymodem_config.h
  *
  * Copyright (C) 2021
  *
- * strategy.h is free software: you can redistribute it and/or modify
+ * ymodem_config.h is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
@@ -20,8 +20,8 @@
  *
  * @encoding utf-8
  */
-#ifndef __STRATEGY_H
-#define __STRATEGY_H
+#ifndef __YMODEM_CONFIG_H
+#define __YMODEM_CONFIG_H
 
 #ifdef __cplusplus
 extern "C"
@@ -34,17 +34,14 @@ extern "C"
 #include <stddef.h>
 
 /*---------- macro ----------*/
-#define STRATEGY_ERR_OK                     (0)
-#define STRATEGY_ERR_FAILED                 (-1)
-#define STRATEGY_ERR_REBOOT                 (-2)
-#define STRATEGY_ERR_JUMP                   (-3)
+#define YMODEM_SAVE_FILE_NAME               (1)
+#define YMODEM_RECV_TIMEOUT                 (100)
 
 /*---------- type define ----------*/
 /*---------- variable prototype ----------*/
 /*---------- function prototype ----------*/
-extern int32_t strategy_process(void);
 
 #ifdef __cplusplus
 }
 #endif
-#endif /* __STRATEGY_H */
+#endif /* __YMODEM_CONFIG_H */
