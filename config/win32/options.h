@@ -71,11 +71,11 @@ extern "C"
 /* print for kernel
  */
 #ifndef CONFIG_SILENT
-#define __debug_message(x, y...)        printk("\033[32;22m" x, ##y)
-#define __debug_info(x, y...)           printk("\033[37;22m" x, ##y)
-#define __debug_warn(x, y...)           printk("\033[31;22m" x, ##y)
-#define __debug_error(x, y...)          printk("\033[31;22m" x, ##y)
-#define __debug_cont(x, y...)           printk(x, ##y)
+#define __debug_message(x, y...)        printf("\033[32;22m" x, ##y)
+#define __debug_info(x, y...)           printf("\033[37;22m" x, ##y)
+#define __debug_warn(x, y...)           printf("\033[31;22m" x, ##y)
+#define __debug_error(x, y...)          printf("\033[31;22m" x, ##y)
+#define __debug_cont(x, y...)           printf(x, ##y)
 #else
 #define __debug_message(x, y...)
 #define __debug_info(x, y...)

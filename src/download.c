@@ -27,10 +27,11 @@
 #include "platform.h"
 #include "ymodem.h"
 #include "md5.h"
+#include "flash.h"
+#include "firmware.h"
 #include "config/errorno.h"
 #include "config/options.h"
 #include <string.h>
-#include <stdio.h>
 
 /*---------- macro ----------*/
 /*---------- variable prototype ----------*/
@@ -39,6 +40,9 @@
 /*---------- variable ----------*/
 static ymodem_context_t _ymodem_ctx;
 static uint8_t _buf[CONFIG_RECV_BUFFER_SIZE];
+static uint32_t fsize;
+static struct st_md5_ctx md5_ctx;
+static uint8_t md5_val[16];
 
 /*---------- function ----------*/
 static bool _getc(uint8_t *ch, uint32_t ms)
@@ -65,14 +69,44 @@ static bool _putc(const uint8_t ch)
 
 static bool _file_verify(const char *filename, uint32_t filesize)
 {
-    printf("%s: %dBytes\n", filename, filesize);
+    bool retval = false;
 
-    return true;
+    do {
+        if(strstr(filename, SYS_MODEL_NAME) == NULL) {
+            __debug_warn("File name verify failed\n");
+            break;
+        }
+        if(filesize > CONFIG_APP_MAX_SIZE) {
+            __debug_warn("File size is too large, allow size is %dBytes\n", CONFIG_APP_MAX_SIZE);
+            break;
+        }
+        fsize = filesize;
+        retval = true;
+    } while(0);
+
+    return retval;
 }
 
 static bool _frame_save(uint32_t offset, const uint8_t *frame, uint32_t size)
 {
-    return true;
+    bool retval = false;
+    uint32_t addr = CONFIG_APP_BK_LOCATION_BASE + offset;
+
+    do {
+        if(!offset) {
+            md5_init(&md5_ctx);
+        }
+        md5_update(&md5_ctx, (uint8_t *)frame, size);
+        if(size != device_write(g_plat.dev.backup_flash, (void *)frame, addr, size)) {
+            break;
+        }
+        retval = true;
+        if((offset + size) == fsize) {
+            md5_final(&md5_ctx, md5_val);
+        }
+    } while(0);
+
+    return retval;
 }
 
 int32_t download_file(void)
@@ -90,11 +124,9 @@ int32_t download_file(void)
     simplefifo_reset(g_plat.dev.fifo);
     ymodem_init(&_ymodem_ctx);
     if(YMODEM_ERR_OVER == ymodem_recv_file()) {
-        debug_message("OK\r\n");
-        retval = CY_EOK;
-    } else {
-        debug_error("ERROR\r\n");
+        retval = firmware_update_info(fsize, md5_val, false);
     }
+    (retval == CY_EOK) ? debug_message("\r\nOK\r\n") : debug_error("\r\nERROR\r\n");
     simplefifo_reset(g_plat.dev.fifo);
 
     return retval;

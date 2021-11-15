@@ -24,6 +24,7 @@
 /*---------- includes ----------*/
 #include "platform.h"
 #include "strategy.h"
+#include "firmware.h"
 #include "config/errorno.h"
 #include "config/options.h"
 
@@ -44,11 +45,30 @@ int32_t main(void)
     /* create thread */
     thread_ticks_create();
     thread_com_create();
+reboot:
     /* start strategy */
     result = strategy_process();
-    if(result == STRATEGY_ERR_REBOOT) {
-        debug_message("Reboot\r\n");
-    } else if(result == STRATEGY_ERR_JUMP) {
-        debug_message("Jump\r\n");
+    do {
+        if(result == STRATEGY_ERR_REBOOT) {
+            debug_message("Reboot\r\n");
+            break;
+        } else if(result == STRATEGY_ERR_JUMP) {
+            debug_message("Jump\r\n");
+            break;
+        }
+        if(firmware_get_updated_flag() == false) {
+            if(firmware_update() != CY_EOK) {
+                result = STRATEGY_ERR_FAILED;
+                break;
+            }
+        }
+        result = STRATEGY_ERR_JUMP;
+    } while(0);
+    if(result == STRATEGY_ERR_JUMP) {
+        debug_message("Jump to App\r\n");
+    } else {
+        goto reboot;
     }
+
+    return 0;
 }

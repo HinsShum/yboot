@@ -27,6 +27,7 @@
 #include "device.h"
 #include "simplefifo.h"
 #include "firmware.h"
+#include "flash.h"
 #include "wdt.h"
 #include "config/errorno.h"
 #include "config/options.h"
@@ -65,6 +66,8 @@ static void _misc_init(void)
 {
     irq_process_init();
     firmware_init();
+    device_ioctl(g_plat.dev.embed_flash, IOCTL_FLASH_SET_CALLBACK, (void *)plat_wdt_feed);
+    device_ioctl(g_plat.dev.backup_flash, IOCTL_FLASH_SET_CALLBACK, (void *)plat_wdt_feed);
 }
 
 int32_t plat_init(void)

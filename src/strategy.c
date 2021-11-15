@@ -27,6 +27,7 @@
 #include "simplefifo.h"
 #include "flash.h"
 #include "download.h"
+#include "firmware.h"
 #include "config/errorno.h"
 #include "config/options.h"
 #include <ctype.h>
@@ -40,6 +41,7 @@ static int32_t _echo_info(void);
 static int32_t _jump2app(void);
 static int32_t _reboot(void);
 static int32_t _ymodem(void);
+static int32_t _update(void);
 
 /*---------- type define ----------*/
 typedef int32_t (*func_t)(void);
@@ -55,7 +57,7 @@ static cb_t cb_array[] = {
     {'Y', _ymodem},
     {'G', _jump2app},
     {'R', _reboot},
-    // {'U', NULL},
+    {'U', _update},
     {' ', _echo_usage}
 };
 static const char *usage[] = {
@@ -175,6 +177,13 @@ static int32_t _ymodem(void)
     }
 
     return retval;
+}
+
+static int32_t _update(void)
+{
+    firmware_update();
+
+    return STRATEGY_ERR_OK;
 }
 
 static int32_t _process(void)
