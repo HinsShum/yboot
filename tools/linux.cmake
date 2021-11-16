@@ -7,6 +7,7 @@
 cmake_minimum_required(VERSION 3.1)
 
 set(C_SOURCE_LIBS ${C_SOURCE_LIBS} "pthread")
+add_definitions(-DYMODEM_CONFIG_FILE="config/${BOARD_NAME}/ymodem_config.h")
 
 add_subdirectory(bsp/linux)
 add_subdirectory(lib/linux)

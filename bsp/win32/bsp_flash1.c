@@ -159,7 +159,7 @@ static uint32_t bsp_read(uint8_t *buf, uint32_t offset, uint32_t length)
         }
         _DO_LOCK(flash);
         fseek(pfile, addr, SEEK_SET);
-        act_len = fread(buf, length, 1, pfile) * length;
+        act_len = fread(buf, act_len, 1, pfile) * act_len;
         _DO_UNLOCK(flash);
         _DO_CALLBACK(flash);
     } while(0);

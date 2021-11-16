@@ -82,6 +82,14 @@ extern "C"
 #define __debug_cont(x, y...)
 #endif
 
+/* print for app
+ */
+#define debug_message(x, y...)          printk("\033[32;22m" x, ##y)
+#define debug_info(x, y...)             printk("\033[37;22m" x, ##y)
+#define debug_warn(x, y...)             printk("\033[31;22m" x, ##y)
+#define debug_error(x, y...)            printk("\033[31;22m" x, ##y)
+#define debug_cont(x, y...)             printk(x, ##y)
+
 /* embed flash information
  */
 #define CONFIG_EMBED_FLASH_BASE         (0x0)
@@ -90,14 +98,39 @@ extern "C"
 #define CONFIG_EMBED_FLASH_END          (CONFIG_EMBED_FLASH_BASE + CONFIG_EMBED_FLASH_SIZE)
 #define CONFIG_EMBED_FLASH_WRITE_GRAN   (32)
 
+/* app location config in flash
+ * the base addr is an offset from the flash base addr,
+ * not the actual addr of the flash.
+ */
+#define CONFIG_APP_LOCATION_BASE        (0x00)
+#define CONFIG_APP_MAX_SIZE             (30 * 1024)
+
+/* app backup location config in flash
+ * the base addr is an offset from the flash base addr,
+ * not the actual addr of the flash.
+ */
+#define CONFIG_APP_BK_INFO_LOCATION     (32 * 1024)
+#define CONFIG_APP_BK_LOCATION_BASE     (CONFIG_APP_BK_INFO_LOCATION + CONFIG_EMBED_FLASH_BLOCK_SIZE)
+#define CONFIG_APP_BK_MAX_SIZE          (CONFIG_APP_MAX_SIZE)
+#define CONFIG_APP_BK_LOCATION_END      (CONFIG_APP_BK_LOCATION_BASE + CONFIG_APP_BK_MAX_SIZE)
+
 /* fifo size config
  */
-#define CONFIG_FIFO_SIZE                (1024)
+#define CONFIG_FIFO_SIZE                (10400)
+
+/* recv buffer size
+ */
+#define CONFIG_RECV_BUFFER_SIZE         (1040)
+
+/* the max time for wait space char
+ */
+#define CONFIG_YBOOT_WAIT_SPACE_TIME    (MS2TICKS(3000))
 
 /*---------- type define ----------*/
 /*---------- variable prototype ----------*/
 /*---------- function prototype ----------*/
 extern uint64_t ticks_get(void);
+extern int32_t printk(const char *fmt, ...);
 
 #ifdef __cplusplus
 }

@@ -23,6 +23,8 @@
 
 /*---------- includes ----------*/
 #include "platform.h"
+#include "strategy.h"
+#include "firmware.h"
 #include "config/errorno.h"
 #include "config/options.h"
 
@@ -37,12 +39,36 @@ extern void thread_com_create(void);
 /*---------- function ----------*/
 int32_t main(void)
 {
+    int32_t result = STRATEGY_ERR_OK;
+
     plat_init();
     /* create thread */
     thread_ticks_create();
     thread_com_create();
-    for(;;) {
-        __delay_ms(1000);
-        __debug_info("Hello\n");
+reboot:
+    /* start strategy */
+    result = strategy_process();
+    do {
+        if(result == STRATEGY_ERR_REBOOT) {
+            debug_message("Reboot\r\n");
+            break;
+        } else if(result == STRATEGY_ERR_JUMP) {
+            debug_message("Jump\r\n");
+            break;
+        }
+        if(firmware_get_updated_flag() == false) {
+            if(firmware_update() != CY_EOK) {
+                result = STRATEGY_ERR_FAILED;
+                break;
+            }
+        }
+        result = STRATEGY_ERR_JUMP;
+    } while(0);
+    if(result == STRATEGY_ERR_JUMP) {
+        debug_message("Jump to App\r\n");
+    } else {
+        goto reboot;
     }
+
+    return 0;
 }
