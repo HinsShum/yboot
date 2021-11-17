@@ -39,6 +39,7 @@ extern "C"
 /*---------- function prototype ----------*/
 extern int32_t firmware_init(void);
 extern bool firmware_get_updated_flag(void);
+extern void firmware_clear_update_flag(void);
 extern int32_t firmware_update_info(uint32_t fsize, uint8_t *md5, bool updated);
 extern int32_t firmware_update(void);
 

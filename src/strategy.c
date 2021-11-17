@@ -142,6 +142,7 @@ static int32_t _erase_app_backup(void)
     } else {
         debug_error("\r\nERROR\r\n");
     }
+    firmware_clear_update_flag();
 
     return retval;
 }

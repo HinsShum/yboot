@@ -100,20 +100,47 @@ bool firmware_get_updated_flag(void)
     return _firmware.updated;
 }
 
+void firmware_clear_update_flag(void)
+{
+    _firmware.updated = true;
+}
+
 int32_t firmware_update_info(uint32_t fsize, uint8_t *md5, bool updated)
 {
     uint16_t crc16 = 0;
+    int32_t retval = CY_ERROR;
+    uint32_t addr = CONFIG_APP_BK_INFO_LOCATION;
+
+    if(device_ioctl(g_plat.dev.backup_flash, IOCTL_FLASH_ERASE_BLOCK, &addr)) {
+        _firmware.magic = FIRMWARE_INFO_MAGIC;
+        _firmware.fsize = fsize;
+        memcpy(_firmware.md5, md5, ARRAY_SIZE(_firmware.md5));
+        _firmware.updated = updated;
+        memset(_firmware.reserve, 0, ARRAY_SIZE(_firmware.reserve));
+        _firmware.crc16 = utils_htons(checksum_crc16_xmodem((void *)&_firmware, offsetof(firmware_info_t, crc16)));
+        if(sizeof(_firmware) == device_write(g_plat.dev.backup_flash, (void *)&_firmware, CONFIG_APP_BK_INFO_LOCATION, sizeof(_firmware))) {
+            retval = CY_EOK;
+        } else {
+            debug_warn("Save firmware information failed\n");
+        }
+    }
+
+    return retval;
+}
+
+static int32_t _erase(void)
+{
     int32_t retval = CY_EOK;
 
-    _firmware.magic = FIRMWARE_INFO_MAGIC;
-    _firmware.fsize = fsize;
-    memcpy(_firmware.md5, md5, ARRAY_SIZE(_firmware.md5));
-    _firmware.updated = updated;
-    memset(_firmware.reserve, 0, ARRAY_SIZE(_firmware.reserve));
-    _firmware.crc16 = utils_htons(checksum_crc16_xmodem((void *)&_firmware, offsetof(firmware_info_t, crc16)));
-    if(sizeof(_firmware) != device_write(g_plat.dev.backup_flash, (void *)&_firmware, CONFIG_APP_BK_INFO_LOCATION, sizeof(_firmware))) {
-        debug_warn("Save firmware information failed\n");
-        retval = CY_ERROR;
+    for(uint32_t addr = CONFIG_APP_LOCATION_BASE; addr < (CONFIG_APP_LOCATION_BASE + CONFIG_APP_MAX_SIZE);) {
+        uint32_t erased = device_ioctl(g_plat.dev.embed_flash, IOCTL_FLASH_ERASE_BLOCK, &addr);
+        if(erased <= 0) {
+            retval = CY_ERROR;
+            debug_error("\r\nERROR\r\n");
+            break;
+        }
+        addr += erased;
+        debug_cont("#");
     }
 
     return retval;
@@ -131,34 +158,36 @@ static int32_t _update(void)
 
     md5_init(&ctx);
     debug_message("Start update firmware");
-    do {
-        if((offset + ARRAY_SIZE(cp)) < fsize) {
-            cp_len = ARRAY_SIZE(cp);
-        } else {
-            cp_len = fsize - offset;
-        }
-        /* copy firmware from backup flash to embed flash */
-        if(cp_len != device_read(g_plat.dev.backup_flash, cp, CONFIG_APP_BK_LOCATION_BASE + offset, cp_len)) {
-            debug_error("\r\nERROR\r\nRead firmware from backup failed, offset=%08X\r\n", offset);
-            break;
-        }
-        md5_update(&ctx, cp, cp_len);
-        if(cp_len != device_write(g_plat.dev.embed_flash, cp, CONFIG_APP_LOCATION_BASE + offset, cp_len)) {
-            debug_error("\r\nERROR\r\nWrite firmware to embed flash failed, offset=%08X\r\n", offset);
-            break;
-        }
-        debug_cont(".");
-        offset += cp_len;
-        if(offset == fsize) {
-            md5_final(&ctx, md5);
-            if(memcmp(md5, _firmware.md5, ARRAY_SIZE(md5)) == 0) {
-                debug_message("\r\nOK\r\n");
-                retval = firmware_update_info(fsize, md5, true);
+    if(_erase() == CY_EOK) {
+        do {
+            if((offset + ARRAY_SIZE(cp)) < fsize) {
+                cp_len = ARRAY_SIZE(cp);
             } else {
-                debug_error("\r\nERROR\r\nCheck md5 failed\r\n");
+                cp_len = fsize - offset;
             }
-        }
-    } while(offset < fsize);
+            /* copy firmware from backup flash to embed flash */
+            if(cp_len != device_read(g_plat.dev.backup_flash, cp, CONFIG_APP_BK_LOCATION_BASE + offset, cp_len)) {
+                debug_error("\r\nERROR\r\nRead firmware from backup failed, offset=%08X\r\n", offset);
+                break;
+            }
+            md5_update(&ctx, cp, cp_len);
+            if(cp_len != device_write(g_plat.dev.embed_flash, cp, CONFIG_APP_LOCATION_BASE + offset, cp_len)) {
+                debug_error("\r\nERROR\r\nWrite firmware to embed flash failed, offset=%08X\r\n", offset);
+                break;
+            }
+            debug_cont(".");
+            offset += cp_len;
+            if(offset == fsize) {
+                md5_final(&ctx, md5);
+                if(memcmp(md5, _firmware.md5, ARRAY_SIZE(md5)) == 0) {
+                    debug_message("\r\nOK\r\n");
+                    retval = firmware_update_info(fsize, md5, true);
+                } else {
+                    debug_error("\r\nERROR\r\nCheck md5 failed\r\n");
+                }
+            }
+        } while(offset < fsize);
+    }
 
     return retval;
 }

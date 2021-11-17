@@ -54,6 +54,7 @@ static bool _getc(uint8_t *ch, uint32_t ms)
             retval = true;
             break;
         }
+        plat_wdt_feed();
         __delay_ms(1);
     } while(--ms);
 

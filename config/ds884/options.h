@@ -33,6 +33,7 @@ extern "C"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
+#include "version.h"
 #include "gd32e23x.h"
 
 /*---------- macro ----------*/
