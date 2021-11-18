@@ -32,7 +32,6 @@
 #define _IS_WRITE_ADDRESS_LEGAL(address)        ((address >= CONFIG_EMBED_FLASH_BASE) && \
                                                  (address < CONFIG_EMBED_FLASH_END) && \
                                                  ((address & 0x3) == 0))
-#define _IS_WRITE_LENGTH_LEGAL(length)          ((length & 0x3) == 0)
 #define _IS_READ_ADDRESS_LEGAL(address)         ((address >= CONFIG_EMBED_FLASH_BASE) && \
                                                  (address < CONFIG_EMBED_FLASH_END))
 
@@ -119,7 +118,7 @@ static uint32_t bsp_write(const uint8_t *buf, uint32_t offset, uint32_t length)
         if(!buf) {
             break;
         }
-        if(!_IS_WRITE_ADDRESS_LEGAL(address) || !_IS_WRITE_LENGTH_LEGAL(length)) {
+        if(!_IS_WRITE_ADDRESS_LEGAL(address)) {
             break;
         }
         _DO_LOCK(flash);
@@ -133,6 +132,9 @@ static uint32_t bsp_write(const uint8_t *buf, uint32_t offset, uint32_t length)
             act_len += sizeof(data);
             p += sizeof(data);
             address += sizeof(data);
+        }
+        if(act_len > length) {
+            act_len = length;
         }
         fmc_lock();
         _DO_UNLOCK(flash);

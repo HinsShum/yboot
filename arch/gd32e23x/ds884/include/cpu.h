@@ -84,6 +84,6 @@ extern void tick_increase(void);
  * 
  * @retval tick variable, the unit is milliseconds
  */
-extern uint32_t tick_get(void);
+extern uint64_t tick_get(void);
 
 #endif /* __CPU_H */

@@ -34,7 +34,7 @@ extern uint32_t Image$$ER_IROM1$$Base[];
 /*---------- type define ----------*/
 /*---------- variable ----------*/
 static uint32_t clk_cycle = 0;
-static uint32_t __IO __tick = 0;
+static uint64_t __IO __tick = 0;
 
 /*---------- function ----------*/
 static void config_systick(void)
@@ -141,7 +141,7 @@ void tick_increase(void)
     __tick++;
 }
 
-uint32_t tick_get(void)
+uint64_t tick_get(void)
 {
     return __tick;
 }

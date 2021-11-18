@@ -35,14 +35,14 @@ extern "C"
 
 /*---------- macro ----------*/
 #if defined(__CC_ARM) || defined(__ARMCC_VERSION)
-#define container_of(ptr, type, member) (                   \
+#define container_of(ptr, type, member) (                       \
         (type *)((char *)ptr - offsetof(type, member)))
 #elif defined(__GNUC__)
-#define container_of(ptr, type, member) ({                  \
-        const typeof(((type *)0)->member) *__mptr = (ptr);  \
+#define container_of(ptr, type, member) ({                      \
+        const __typeof(((type *)0)->member) *__mptr = (ptr);    \
         (type *)((char *)__mptr - offsetof(type, member));})
 #elif defined(_MSC_VER)
-#define container_of(ptr, type, member) (                   \
+#define container_of(ptr, type, member) (                       \
         (type *)((char *)ptr - offsetof(type, member)))
 #else
 #error "No container_of defined in this compiler"

@@ -107,7 +107,6 @@ void firmware_clear_update_flag(void)
 
 int32_t firmware_update_info(uint32_t fsize, uint8_t *md5, bool updated)
 {
-    uint16_t crc16 = 0;
     int32_t retval = CY_ERROR;
     uint32_t addr = CONFIG_APP_BK_INFO_LOCATION;
 

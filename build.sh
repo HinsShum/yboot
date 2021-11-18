@@ -6,7 +6,7 @@ function build()
     if [ "$board_name" == "linux" -o "$board_name" == "win32" ]; then
         cmake -B build -G "Unix Makefiles" -DBOARD_NAME=$board_name -DPROGRAM_NAME=$program_name -DCMAKE_BUILD_TYPE=$build_type
     else
-        cmake -B build -G "Unix Makefiles" -DBOARD_NAME=$board_name -DPROGRAM_NAME=$program_name -DCMAKE_TOOLCHAIN_FILE=${board_name}_toolchain.cmake -DCMAKE_BUILD_TYPE=$build_type
+        cmake -B build -G "Unix Makefiles" -DBOARD_NAME=$board_name -DPROGRAM_NAME=$program_name -DCMAKE_TOOLCHAIN_FILE=tools/${board_name}_toolchain.cmake -DCMAKE_BUILD_TYPE=$build_type
     fi
 }
 
@@ -75,7 +75,7 @@ clear=0
 build_type=Debug
 download=0
 erase=0
-support_board=("linux_0_0_null" "win32_0_0_null")
+support_board=("linux_0_0_null" "win32_0_0_null" "cy001_0x08000000_0x08004000_STM32F103ZE")
 find_board=0
 
 while [ $# -gt 0 ]; do

@@ -129,7 +129,7 @@ static int32_t _erase_app_backup(void)
 
     debug_message("Erase app backup: ");
     for(uint32_t addr = CONFIG_APP_BK_INFO_LOCATION; addr < CONFIG_APP_BK_LOCATION_END;) {
-        uint32_t erased = device_ioctl(g_plat.dev.backup_flash, IOCTL_FLASH_ERASE_BLOCK, &addr);
+        int32_t erased = device_ioctl(g_plat.dev.backup_flash, IOCTL_FLASH_ERASE_BLOCK, &addr);
         if(erased <= 0) {
             retval = STRATEGY_ERR_FAILED;
             break;
@@ -191,7 +191,6 @@ static int32_t _process(void)
 {
     int32_t retval = STRATEGY_ERR_OK;
     char ch = 0;
-    func_t cb = NULL;
 
     simplefifo_reset(g_plat.dev.fifo);
     _echo_usage();
@@ -200,7 +199,6 @@ static int32_t _process(void)
         plat_wdt_feed();
         if(_get_char(&ch, 5000)) {
             ch = toupper(ch);
-            cb = NULL;
             for(uint8_t i = 0; i < ARRAY_SIZE(cb_array); ++i) {
                 if(cb_array[i].ch == ch) {
                     retval = cb_array[i].cb();
