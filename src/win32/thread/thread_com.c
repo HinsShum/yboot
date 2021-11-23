@@ -52,6 +52,8 @@ static void *_thread_com(void *args)
             __delay_ms(1);
         }
     }
+
+    return NULL;
 }
 
 void thread_com_create(void)
