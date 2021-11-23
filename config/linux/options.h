@@ -41,6 +41,7 @@ extern "C"
 #undef assert
 #ifdef NDEBUG
 #define assert(expr)                    ((void)0U)
+#define CONFIG_SILENT
 #else
 #define assert(expr)                    do { if(!(expr)) { for(;;); }} while(0)
 #endif

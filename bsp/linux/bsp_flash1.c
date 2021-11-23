@@ -91,7 +91,10 @@ static bool bsp_init(void)
     memset(pbuf, 0xFF, CONFIG_EMBED_FLASH_END - CONFIG_EMBED_FLASH_BASE);
     pfile = fopen(_FLASH_FILE_NAME, "rb");
     if(pfile) {
-        fread(pbuf, CONFIG_EMBED_FLASH_END - CONFIG_EMBED_FLASH_BASE, 1, pfile);
+        if(!fread(pbuf, CONFIG_EMBED_FLASH_END - CONFIG_EMBED_FLASH_BASE, 1, pfile)) {
+            __debug_error("Read file(%s) failed\n", _FLASH_FILE_NAME);
+            exit(EXIT_FAILURE);
+        }
         fclose(pfile);
     }
     pfile = fopen(_FLASH_FILE_NAME, "wb+");

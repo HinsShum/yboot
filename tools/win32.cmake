@@ -11,3 +11,5 @@ add_definitions(-DYMODEM_CONFIG_FILE="config/${BOARD_NAME}/ymodem_config.h")
 
 add_subdirectory(bsp/win32)
 add_subdirectory(lib/win32)
+
+set(CMAKE_C_FLAGS "-Wall -Werror -Wformat=0 -std=c99 -ffunction-sections -fdata-sections")

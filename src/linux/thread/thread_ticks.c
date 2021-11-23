@@ -53,6 +53,8 @@ static void *thread_ticks_inc(void *args)
         _ticks++;
         pthread_mutex_unlock(&_lock);
     }
+
+    return NULL;
 }
 
 uint64_t ticks_get(void)
