@@ -97,6 +97,10 @@ static bool bsp_init(void)
     bsp_io_init();
     bsp_uart_init();
     bsp_nvic_init();
+#if !defined(__ARMCC_VERSION) && defined(__GNUC__)
+    /* close printf line buffer */
+    setbuf(stdout, NULL);
+#endif
 
     return true;
 }

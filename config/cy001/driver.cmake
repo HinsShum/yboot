@@ -7,5 +7,6 @@
 cmake_minimum_required(VERSION 3.1)
 
 set(FLASH "y")
+set(FM25QXX "y")
 set(SERIAL "y")
 set(WDT "y")

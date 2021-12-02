@@ -23,7 +23,7 @@ add_definitions(-DSTM32F103xE -DUSE_FULL_LL_DRIVER -DUSE_HAL_DRIVER -DHSE_VALUE=
 set(MCU_FLAGS "-mcpu=cortex-m3 -mthumb")
 set(CMAKE_C_FLAGS "${MCU_FLAGS} -Wall -Werror -Wformat=0 -std=gnu99 -ffunction-sections -fdata-sections")
 set(CMAKE_C_FLAGS_DEBUG "-O0 -g")
-set(CMAKE_C_FLAGS_RELEASE "-O1 -DNDEBUG")
+set(CMAKE_C_FLAGS_RELEASE "-O2 -DNDEBUG")
 if(NOT DEFINED CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Debug")
 endif()

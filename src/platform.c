@@ -48,12 +48,12 @@ static void _driver_init(void)
     /* initialize driver frame */
     driver_search_device();
     /* open device */
+    g_plat.dev.com = device_open("com");
+    assert(g_plat.dev.com);
     g_plat.dev.embed_flash = device_open("flash1");
     assert(g_plat.dev.embed_flash);
     g_plat.dev.backup_flash = device_open("flash2");
     assert(g_plat.dev.backup_flash);
-    g_plat.dev.com = device_open("com");
-    assert(g_plat.dev.com);
     g_plat.dev.wdt = device_open("wdt");
     assert(g_plat.dev.wdt);
     g_plat.dev.fifo = simplefifo_new();

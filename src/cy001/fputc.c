@@ -34,6 +34,14 @@
 /*---------- variable ----------*/
 /*---------- function ----------*/
 #if defined(__ARMCC_VERSION)
+#if !defined(__MICROLIB)
+#if defined(__CC_ARM)
+struct __FILE {
+   int handle;
+};
+#endif
+FILE __stdout;
+#endif
 int fputc(int ch, FILE *p)
 {
     uint8_t c = (uint8_t)ch;
