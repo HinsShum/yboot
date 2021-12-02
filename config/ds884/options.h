@@ -145,7 +145,7 @@ extern "C"
 /*---------- function prototype ----------*/
 extern void udelay(uint32_t us);
 extern void mdelay(uint32_t delay);
-extern uint32_t tick_get(void);
+extern uint64_t tick_get(void);
 
 #ifdef __cplusplus
 }
