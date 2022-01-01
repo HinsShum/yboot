@@ -36,7 +36,7 @@
 /*---------- type define ----------*/
 /*---------- variable ----------*/
 static uint8_t _comport;
-static uint8_t _buf[256];
+static uint8_t _buf[10400];
 
 /*---------- function ----------*/
 static void *_thread_com(void *args)
@@ -45,7 +45,7 @@ static void *_thread_com(void *args)
 
     device_ioctl(g_plat.dev.com, IOCTL_SERIAL_GET_COMPORT, &_comport);
     for(;;) {
-        if(0 < (count = RS232_PollComport(_comport - 1, _buf, ARRAY_SIZE(_buf)))) {
+        if(0 < (count = RS232_PollComport(_comport, _buf, ARRAY_SIZE(_buf)))) {
             device_irq_process(g_plat.dev.com, 0, _buf, count);
         } else {
             __delay_ms(1);
