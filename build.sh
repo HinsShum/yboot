@@ -3,10 +3,10 @@
 
 function build()
 {
-    if [ "$board_name" == "linux" -o "$board_name" == "win32" ]; then
-        cmake -B build -G "Unix Makefiles" -DBOARD_NAME=$board_name -DPROGRAM_NAME=$program_name -DCMAKE_BUILD_TYPE=$build_type
+    if [ "$board_name" == "posix" -o "$board_name" == "win32" ]; then
+        cmake -B build -G "$build_tools"  -DBOARD_NAME=$board_name -DPROGRAM_NAME=$program_name -DCMAKE_BUILD_TYPE=$build_type
     else
-        cmake -B build -G "Unix Makefiles" -DBOARD_NAME=$board_name -DPROGRAM_NAME=$program_name -DCMAKE_TOOLCHAIN_FILE=tools/${board_name}_toolchain.cmake -DCMAKE_BUILD_TYPE=$build_type
+        cmake -B build -G "$build_tools" -DBOARD_NAME=$board_name -DPROGRAM_NAME=$program_name -DCMAKE_TOOLCHAIN_FILE=boards/${board_name}/tools/${board_name}_toolchain.cmake -DCMAKE_BUILD_TYPE=$build_type
     fi
 }
 
@@ -54,14 +54,18 @@ function help_info()
 {
     echo "This shell script help user to build the easy_bootloader project easily"
     echo "Usage:"
-    echo "./build.sh [options]"
+    echo "./build.sh -<B|b> --plat=<board name> [options]"
     echo ""
-    echo "options"
-    echo "  -[B|b] --plat=<board name> --name=<program name> --[debug|release]  = build the project by board name"
-    echo "  -[C|c]                                                              = compile the project"
-    echo "  -[R|r]                                                              = clear the target and the project directory"
-    echo "  --download                                                          = download bin file to the device"
-    echo "  --erase                                                             = erase flash on the device"
+    echo "Board name: the support board must be documented in a file named support_board.cfg"
+    echo "Options"
+    echo "  -[C|c]             = compile the project after building"
+    echo "  -[R|r]             = remove the building directory"
+    echo "  -g=<build tools>   = select the build tools, the value can be either make of ninja, default is make"
+    echo "  --debug            = select the debug level"
+    echo "  --release          = select the debug level"
+    echo "  --name=<program>   = specify the project name, default name is 'demo'"
+    echo "  --download         = download firmware by jlink"
+    echo "  --erase            = erase the chip flash by jlink"
 }
 
 if [ $# -eq 0 ]; then
@@ -73,9 +77,10 @@ build=0
 compile=0
 clear=0
 build_type=Debug
+build_tools="Unix Makefiles"
 download=0
 erase=0
-support_board=("linux_0_0_null" "win32_0_0_null" "cy001_0x08000000_0x08004000_STM32F103ZE")
+support_board=("posix_0_0_null" "win32_0_0_null" "cy001_0x08000000_0x08004000_STM32F103ZE")
 find_board=0
 
 while [ $# -gt 0 ]; do
@@ -99,6 +104,10 @@ while [ $# -gt 0 ]; do
         erase=1
     elif [ $( expr $1 : '-[-help|h]' ) -gt 0 ]; then
         help_info
+    elif [ $( expr $1 : '-g=make' ) -gt 0 ]; then
+        build_tools="Unix Makefiles"
+    elif [ $( expr $1 : '-g=ninja' ) -gt 0 ]; then
+        build_tools="Ninja"
     fi
     shift
 done
@@ -125,7 +134,7 @@ if [ -n "$board_name" ]; then
     fi
 fi
 
-if [ "$board_name" == "linux" -o "$board_name" == "win32" ]; then
+if [ "$board_name" == "posix" -o "$board_name" == "win32" ]; then
     download=0
     erase=0
 fi
@@ -133,7 +142,7 @@ fi
 if [ $build -gt 0 ]; then
     if [ -n "$board_name" ]; then
         build
-        if [ "$board_name" != "linux" -a "$board_name" != "win32" ]; then
+        if [ "$board_name" != "posix" -a "$board_name" != "win32" ]; then
             generate_flash_jlink
         fi
     else

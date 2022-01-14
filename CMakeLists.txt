@@ -62,17 +62,14 @@ function(DIRNAME INPUT OUTPUT)
 endfunction(DIRNAME)
 
 # set global include directory
-set(G_SOURCE_INCLUDE_DIRS ${G_SOURCE_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR})
+set(G_SOURCE_INCLUDE_DIRS ${G_SOURCE_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/inc")
 
 #set target c file pathname
 set(C_SOURCE_FILES)
 # set project lib
 set(C_SOURCE_LIBS)
 
-add_definitions(-DCONFIG_OPTIONS_FILE="config/${BOARD_NAME}/options.h")
-
-include("tools/${BOARD_NAME}.cmake")
-add_subdirectory(src)
+include("boards/${BOARD_NAME}/tools/${BOARD_NAME}.cmake")
 add_subdirectory(driver)
 add_subdirectory(common)
 add_subdirectory(utils)
@@ -86,7 +83,7 @@ target_include_directories(${PROJECT_NAME}.elf PRIVATE "${G_SOURCE_INCLUDE_DIRS}
 
 target_link_libraries(${PROJECT_NAME}.elf PUBLIC ${C_SOURCE_LIBS})
 
-if(NOT "${BOARD_NAME}" STREQUAL "linux" AND NOT "${BOARD_NAME}" STREQUAL "win32")
+if(NOT "${CMAKE_SYSTEM_NAME}" STREQUAL "Windows" AND NOT "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
     # binary
     set(ELF_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.elf)
     set(HEX_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.hex)

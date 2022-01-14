@@ -7,7 +7,6 @@
 cmake_minimum_required(VERSION 3.1)
 
 if(DEFINED BOARD_NAME)
-    include("${PROJECT_SOURCE_DIR}/config/${BOARD_NAME}/stlib.cmake")
     set(TARGET_LIB_NAME stlib)
     set(TARGET_C_FILES)
     set(TARGET_INC_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/Inc")

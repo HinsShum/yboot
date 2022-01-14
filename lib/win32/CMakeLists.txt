@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.1)
 
 set(TARGET_LIB_NAME lib)
 set(TARGET_C_FILES)
-SET(TARGET_INC_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/include")
+SET(TARGET_INC_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/inc")
 
 file(GLOB FILES "*.c")
 set(FILES_OUT "")

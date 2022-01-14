@@ -55,5 +55,5 @@ dkms.conf
 # directory
 .vscode
 build
-.mdk/*/*
-!.mdk/*/*.uvprojx
+boards/*/.mdk/*
+!boards/*/.mdk/*.uvprojx

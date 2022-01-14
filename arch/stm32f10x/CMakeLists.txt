@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.1)
 
 file(GLOB C_FILES "*.c")
 set(CMAKELISTS_DIRS)
-set(ARCH_INC_DIRS ${ARCH_INC_DIRS} "${CMAKE_CURRENT_SOURCE_DIR}/include")
+set(ARCH_INC_DIRS ${ARCH_INC_DIRS} "${CMAKE_CURRENT_SOURCE_DIR}/inc")
 
 #get sub directory
 file(GLOB_RECURSE CMAKELISTS "CMakeLists.txt")

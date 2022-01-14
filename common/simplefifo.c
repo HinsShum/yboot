@@ -23,8 +23,8 @@
 
 /*---------- includes ----------*/
 #include "simplefifo.h"
-#include "config/options.h"
-#include "config/errorno.h"
+#include "options.h"
+#include "errorno.h"
 
 /*---------- macro ----------*/
 #ifndef CONFIG_SIMPLEFIFO_DYNAMIC_COUNT
