@@ -36,6 +36,7 @@ extern "C"
 #include <stdio.h>
 #endif
 #include <unistd.h>
+#include "misc.h"
 
 /*---------- macro ----------*/
 #undef assert
@@ -45,11 +46,6 @@ extern "C"
 #else
 #define assert(expr)                    do { if(!(expr)) { for(;;); }} while(0)
 #endif
-
-/* format to string
- */
-#define _STRING(x)                      #x              /*<< only format alphabet as string */
-#define STRING(x)                       _STRING(x)      /*<< format alphabet or digit as string */
 
 /* system variables defined
  */

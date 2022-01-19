@@ -48,6 +48,14 @@ extern "C"
 #error "No container_of defined in this compiler"
 #endif
 
+/* format to string
+ */
+#define _STRING(x)                      #x              /*<< only format alphabet as string */
+#define STRING(x)                       _STRING(x)      /*<< format alphabet or digit as string */
+
+#define ARRAY_SIZE(x)                   (sizeof(x) / sizeof((x)[0]))
+#define FIELD_SIZEOF(t, f)              (sizeof(((t *)0)->f))
+
 /*---------- type define ----------*/
 /*---------- variable prototype ----------*/
 /*---------- function prototype ----------*/

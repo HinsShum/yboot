@@ -33,6 +33,7 @@ extern "C"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
+#include "misc.h"
 #include "version.h"
 #include "stm32f1xx.h"
 #include "stm32f1xx_ll_conf.h"
@@ -45,11 +46,6 @@ extern "C"
 #else
 #define assert(expr)                    do { if(!(expr)) { for(;;); }} while(0)
 #endif
-
-/* format to string
- */
-#define _STRING(x)                      #x              /*<< only format alphabet as string */
-#define STRING(x)                       _STRING(x)      /*<< format alphabet or digit as string */
 
 /* system variables defined
  */
