@@ -74,6 +74,7 @@ add_subdirectory(driver)
 add_subdirectory(common)
 add_subdirectory(utils)
 add_subdirectory(components)
+add_subdirectory(app)
 
 # tell cmake asm file also is c file
 set_property(SOURCE ${C_SOURCE_FILES} PROPERTY LANGUAGE C)
@@ -81,6 +82,7 @@ set_property(SOURCE ${C_SOURCE_FILES} PROPERTY LANGUAGE C)
 add_executable(${PROJECT_NAME}.elf ${C_SOURCE_FILES})
 target_include_directories(${PROJECT_NAME}.elf PRIVATE "${G_SOURCE_INCLUDE_DIRS}")
 
+message("aa: ${C_SOURCE_LIBS}")
 target_link_libraries(${PROJECT_NAME}.elf PUBLIC ${C_SOURCE_LIBS})
 
 if(NOT "${CMAKE_SYSTEM_NAME}" STREQUAL "Windows" AND NOT "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")

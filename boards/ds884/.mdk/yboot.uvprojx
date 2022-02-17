@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>GD32E23X, GD32E230, CONFIG_OPTIONS_FILE=&lt;config/options.h&gt;, YMODEM_CONFIG_FILE=&lt;config/ymodem_config.h&gt;, NDEBUG</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\arch\gd32e23x\inc;..\..\..\common\inc;..\..\..\components\ymodem\src\inc;..\..\..\driver\include;..\..\..\lib\GigaDevice\gd32e23x\peripheral\Include;..\..\..\utils\include;..\..\..\inc;..\..\inc;..\bsp\inc;..\cpu\inc;..\..\ds884</IncludePath>
+              <IncludePath>..\..\..\arch\gd32e23x\inc;..\..\..\common\inc;..\..\..\components\ymodem\src\inc;..\..\..\driver\include;..\..\..\lib\GigaDevice\gd32e23x\peripheral\Include;..\..\..\utils\include;..\..\..\inc;..\bsp\inc;..\cpu\inc;..\..\ds884;..\..\..\app\src\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -534,31 +534,6 @@
           <GroupName>src</GroupName>
           <Files>
             <File>
-              <FileName>download.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\download.c</FilePath>
-            </File>
-            <File>
-              <FileName>firmware.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\firmware.c</FilePath>
-            </File>
-            <File>
-              <FileName>irq_process.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\irq_process.c</FilePath>
-            </File>
-            <File>
-              <FileName>platform.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform.c</FilePath>
-            </File>
-            <File>
-              <FileName>strategy.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\strategy.c</FilePath>
-            </File>
-            <File>
               <FileName>fputc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\src\fputc.c</FilePath>
@@ -567,6 +542,31 @@
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>download.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\app\src\download.c</FilePath>
+            </File>
+            <File>
+              <FileName>firmware.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\app\src\firmware.c</FilePath>
+            </File>
+            <File>
+              <FileName>irq_process.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\app\src\irq_process.c</FilePath>
+            </File>
+            <File>
+              <FileName>platform.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\app\src\platform.c</FilePath>
+            </File>
+            <File>
+              <FileName>strategy.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\app\src\strategy.c</FilePath>
             </File>
           </Files>
         </Group>

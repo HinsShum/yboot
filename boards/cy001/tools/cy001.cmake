@@ -14,7 +14,6 @@ include("${PROJECT_SOURCE_DIR}/boards/${BOARD_NAME}/config/driver.cmake")
 include("${PROJECT_SOURCE_DIR}/boards/${BOARD_NAME}/config/stlib.cmake")
 
 add_subdirectory(arch/stm32f10x)
-add_subdirectory(boards)
 add_subdirectory(boards/cy001/cpu)
 add_subdirectory(boards/cy001/bsp)
 add_subdirectory(boards/cy001/src)

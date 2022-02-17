@@ -13,7 +13,6 @@ add_definitions(-DYMODEM_CONFIG_FILE="config/ymodem_config.h")
 
 include("${PROJECT_SOURCE_DIR}/boards/${BOARD_NAME}/config/driver.cmake")
 
-add_subdirectory(boards)
 add_subdirectory(boards/win32/bsp)
 add_subdirectory(boards/win32/src)
 add_subdirectory(lib/win32)

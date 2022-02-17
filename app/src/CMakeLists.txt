@@ -1,4 +1,4 @@
-# @file boards\CMakeLists.txt
+# @file app/src/CMakeLists.txt
 # @author HinsShum hinsshum@qq.com
 # @date 2022/01/14 19:44:30
 # @encoding utf-8
@@ -11,5 +11,5 @@ file(GLOB FILES "*.c")
 set(FILES_OUT "")
 filter_out(FILES_OUT FILES FILES)
 
-set(C_SOURCE_FILES ${C_SOURCE_FILES} ${FILES} PARENT_SCOPE)
-set(G_SOURCE_INCLUDE_DIRS ${G_SOURCE_INCLUDE_DIRS} "${CMAKE_CURRENT_SOURCE_DIR}/inc" PARENT_SCOPE)
+set(CFILES ${CFILES} ${FILES} PARENT_SCOPE)
+set(INCDIRS ${INCDIRS} "${CMAKE_CURRENT_SOURCE_DIR}/inc" PARENT_SCOPE)
